@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Artwork } from '../types/artwork';
-import { searchByDateRange, PAGE_SIZE } from '../lib/api';
+import { searchByDateRange } from '../lib/api';
 import { useDebounce } from './useDebounce';
 
 const ERA_MAP: [number, number, string][] = [

@@ -1,5 +1,4 @@
-import type { ArtType } from '../../types/artwork';
-import type { MuseumAdapter, FeedResult, SearchFilters } from './types';
+import type { MuseumAdapter, FeedResult } from './types';
 import { makeArtwork } from './types';
 import { getColorName } from '../colorUtils';
 
@@ -35,7 +34,7 @@ function toArtwork(r: Record<string, unknown>) {
     department_title: (r.department as string) || null,
     artwork_type_title: (r.type as string) || null,
     place_of_origin: (r.culture as string[])?.[0] || null,
-    sourceUrl: (r.url as string) || null,
+    sourceUrl: (r.url as string) || undefined,
   });
 }
 

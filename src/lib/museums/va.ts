@@ -1,5 +1,4 @@
-import type { ArtType } from '../../types/artwork';
-import type { MuseumAdapter, FeedResult, SearchFilters } from './types';
+import type { MuseumAdapter, FeedResult } from './types';
 import { makeArtwork } from './types';
 import { getColorName } from '../colorUtils';
 

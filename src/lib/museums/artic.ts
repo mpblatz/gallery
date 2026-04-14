@@ -1,5 +1,5 @@
-import type { Artwork, ArtType } from '../../types/artwork';
-import type { MuseumAdapter, FeedResult, SearchFilters } from './types';
+import type { Artwork } from '../../types/artwork';
+import type { MuseumAdapter, FeedResult } from './types';
 import { makeArtwork } from './types';
 
 const BASE_URL = 'https://api.artic.edu/api/v1';
