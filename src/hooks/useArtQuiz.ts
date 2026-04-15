@@ -177,7 +177,7 @@ async function fetchMultiMuseumPool(
 
   const randomPage = Math.floor(Math.random() * 3) + 1;
   const result = periodFilter
-    ? await adapter.searchCombined({ artType: 'all', timeRange: { startYear: periodFilter.start, endYear: periodFilter.end }, colorHue: null }, randomPage)
+    ? await adapter.searchCombined({ artType: 'all', timeRange: { startYear: periodFilter.start, endYear: periodFilter.end }, colorHue: null, keywords: null }, randomPage)
     : await adapter.searchFeatured(randomPage);
 
   return result.artworks.filter((a) => a.artist_title && a.date_start != null && a.imageUrl);
