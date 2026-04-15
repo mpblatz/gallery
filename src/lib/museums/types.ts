@@ -22,6 +22,7 @@ export interface SearchFilters {
   artType: ArtType;
   timeRange: { startYear: number; endYear: number } | null;
   colorHue: number | null;
+  keywords: string | null;
 }
 
 /** Helper to create a blank Artwork with defaults for the non-universal fields */

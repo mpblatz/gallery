@@ -4,7 +4,8 @@ import { QuizQuestion } from './QuizQuestion';
 import { QuizScoreboard } from './QuizScoreboard';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { museumOptions } from '../../lib/museums/registry';
-import type { MuseumId } from '../../types/artwork';
+import { getImageUrl } from '../../lib/api';
+import type { MuseumId, Artwork } from '../../types/artwork';
 
 const MODES: { id: QuizMode; label: string }[] = [
   { id: 'artist', label: 'Guess the Artist' },
@@ -12,11 +13,29 @@ const MODES: { id: QuizMode; label: string }[] = [
   { id: 'which-first', label: 'Which Came First?' },
 ];
 
+function QuizImage({ artwork }: { artwork: Artwork }) {
+  const src = artwork.imageUrl || (artwork.image_id ? getImageUrl(artwork.image_id, 1686) : null);
+  if (!src) return null;
+  return (
+    <img
+      src={src}
+      alt={artwork.title}
+      className="max-h-[80vh] w-auto max-w-full object-contain"
+      style={{ borderRadius: '10px' }}
+      loading="eager"
+    />
+  );
+}
+
 export function QuizView() {
   const quiz = useArtQuiz();
 
-  return (
-    <div className="px-4 py-6">
+  const isMultipleChoice = quiz.question && quiz.question.mode !== 'which-first';
+  const mcArtwork = quiz.question && quiz.question.mode !== 'which-first' ? quiz.question.artwork : null;
+  const hasImage = mcArtwork && (mcArtwork.imageUrl || mcArtwork.image_id);
+
+  const controlsPanel = (
+    <>
       {/* Mode selector */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {MODES.map((m) => (
@@ -109,8 +128,11 @@ export function QuizView() {
           bestStreak={quiz.bestStreak}
         />
       </div>
+    </>
+  );
 
-      {/* Question area */}
+  const questionArea = (
+    <>
       {quiz.loading && <LoadingSpinner />}
 
       {quiz.error && (
@@ -173,6 +195,29 @@ export function QuizView() {
           )}
         </>
       )}
+    </>
+  );
+
+  // Side-by-side layout for artist/era modes with an image
+  if (isMultipleChoice && hasImage) {
+    return (
+      <div className="flex flex-col md:flex-row">
+        <div className="p-4 py-6 md:w-80 md:flex-shrink-0 overflow-y-auto max-h-[90vh]">
+          {controlsPanel}
+          {questionArea}
+        </div>
+        <div className="md:flex-1 min-w-0 flex items-center justify-center p-4" style={{ background: '#0a0a0a', borderRadius: '0 12px 12px 0' }}>
+          <QuizImage artwork={mcArtwork} />
+        </div>
+      </div>
+    );
+  }
+
+  // Default stacked layout (which-first or no image)
+  return (
+    <div className="px-4 py-6">
+      {controlsPanel}
+      {questionArea}
     </div>
   );
 }

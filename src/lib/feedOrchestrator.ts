@@ -7,6 +7,7 @@ export interface FeedRequest {
   artType: ArtType;
   timeRange: { startYear: number; endYear: number } | null;
   colorHue: number | null;
+  keywords: string | null;
 }
 
 export interface FeedResponse {
@@ -49,6 +50,7 @@ export async function fetchFeed(req: FeedRequest, isLoadMore: boolean, signal?: 
     artType: req.artType,
     timeRange: req.timeRange,
     colorHue: req.colorHue,
+    keywords: req.keywords,
   };
 
   const hasDateFilter = req.timeRange !== null;
@@ -77,7 +79,7 @@ export async function fetchFeed(req: FeedRequest, isLoadMore: boolean, signal?: 
       const state = pageStates.get(adapter.id) || { page: 1, exhausted: false };
       const page = state.page;
 
-      const hasFilters = req.artType !== 'all' || req.timeRange || req.colorHue !== null;
+      const hasFilters = req.artType !== 'all' || req.timeRange || req.colorHue !== null || req.keywords;
       const result = hasFilters
         ? await adapter.searchCombined(filters, page, signal)
         : await adapter.searchFeatured(page, signal);

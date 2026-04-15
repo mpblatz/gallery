@@ -157,9 +157,22 @@ export const articAdapter: MuseumAdapter = {
       }
     }
 
+    if (filters.keywords) {
+      must.push({
+        multi_match: {
+          query: filters.keywords,
+          fields: ['title^3', 'artist_display^2', 'medium_display', 'description'],
+        },
+      });
+    }
+
     return query({
       query: { bool: { must } },
-      sort: filters.colorHue !== null ? [{ colorfulness: 'desc' }] : [{ is_boosted: 'desc' }],
+      sort: filters.keywords
+        ? [{ _score: 'desc' }]
+        : filters.colorHue !== null
+          ? [{ colorfulness: 'desc' }]
+          : [{ is_boosted: 'desc' }],
       from: (page - 1) * PAGE_SIZE,
     }, signal);
   },

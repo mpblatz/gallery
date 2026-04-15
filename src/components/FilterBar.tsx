@@ -25,6 +25,10 @@ interface Props {
   onYearChange: (y: number | null) => void;
   colorHue: number | null;
   onColorHueChange: (h: number | null) => void;
+  publicDomain: boolean;
+  onPublicDomainChange: (v: boolean) => void;
+  keywords: string;
+  onKeywordsChange: (k: string) => void;
 }
 
 type ExpandedPanel = 'none' | 'museum' | 'type' | 'time' | 'color';
@@ -34,6 +38,8 @@ export function FilterBar({
   artType, onArtTypeChange,
   year, onYearChange,
   colorHue, onColorHueChange,
+  publicDomain, onPublicDomainChange,
+  keywords, onKeywordsChange,
 }: Props) {
   const [expanded, setExpanded] = useState<ExpandedPanel>('none');
   const barRef = useRef<HTMLDivElement>(null);
@@ -81,6 +87,38 @@ export function FilterBar({
           border: '1px solid rgba(255,255,255,0.06)',
         }}
       >
+        {/* Search input */}
+        <div className="relative flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 absolute left-2.5 pointer-events-none" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="rgba(255,255,255,0.35)">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          <input
+            type="text"
+            value={keywords}
+            onChange={(e) => onKeywordsChange(e.target.value)}
+            placeholder="Search..."
+            className="text-[11px] font-medium rounded-xl py-1.5 pl-7 pr-6 outline-none w-28 focus:w-40 transition-all duration-200"
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              color: '#fff',
+              border: 'none',
+            }}
+          />
+          {keywords && (
+            <button
+              onClick={() => onKeywordsChange('')}
+              className="absolute right-1.5 cursor-pointer"
+              style={{ color: 'rgba(255,255,255,0.4)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}
+            >
+              <span className="text-[13px]">&times;</span>
+            </button>
+          )}
+        </div>
+
+        <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+
         {/* Museum dropdown trigger */}
         <button
           onClick={() => toggle('museum')}
@@ -126,7 +164,7 @@ export function FilterBar({
             color: year !== null ? '#fff' : 'rgba(255,255,255,0.6)',
           }}
         >
-          Time
+          Time {year !== null && <span className="ml-1 text-[13px] opacity-60">&times;</span>}
         </button>
 
         <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
@@ -150,7 +188,21 @@ export function FilterBar({
             color: colorHue !== null ? '#fff' : 'rgba(255,255,255,0.6)',
           }}
         >
-          Color
+          Color {colorHue !== null && <span className="ml-1 text-[13px] opacity-60">&times;</span>}
+        </button>
+
+        <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+
+        {/* Public Domain toggle */}
+        <button
+          onClick={() => onPublicDomainChange(!publicDomain)}
+          className="px-3 py-1.5 text-[11px] font-medium rounded-xl transition-all cursor-pointer whitespace-nowrap"
+          style={{
+            background: publicDomain ? 'rgba(255,255,255,0.15)' : 'transparent',
+            color: publicDomain ? '#fff' : 'rgba(255,255,255,0.6)',
+          }}
+        >
+          Public Domain {publicDomain && <span className="ml-1 text-[13px] opacity-60">&times;</span>}
         </button>
       </div>
 

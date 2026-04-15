@@ -114,7 +114,13 @@ export const smkAdapter: MuseumAdapter = {
 
   async searchCombined(filters, page, signal?) {
     const filterParts = ['has_image:true'];
-    const keys = filters.colorHue !== null ? getColorName(filters.colorHue) : '*';
+    let keys = '*';
+
+    if (filters.keywords) {
+      keys = filters.keywords;
+    } else if (filters.colorHue !== null) {
+      keys = getColorName(filters.colorHue);
+    }
 
     if (filters.artType !== 'all') {
       const mapped = TYPE_MAP[filters.artType];

@@ -27,7 +27,7 @@ export function QuizModal({ onClose }: Props) {
       }}
     >
       <div
-        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto"
+        className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto"
         style={{
           background: '#111',
           borderRadius: '16px',

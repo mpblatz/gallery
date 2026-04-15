@@ -8,14 +8,14 @@ interface Props {
   onAnswer: (index: number) => void;
 }
 
-function ArtworkImage({ artwork }: { artwork: Artwork }) {
-  const src = artwork.imageUrl || (artwork.image_id ? getImageUrl(artwork.image_id, 600) : null);
+function ArtworkImage({ artwork, fullSize }: { artwork: Artwork; fullSize?: boolean }) {
+  const src = artwork.imageUrl || (artwork.image_id ? getImageUrl(artwork.image_id, fullSize ? 1686 : 600) : null);
   if (!src) return null;
   return (
     <img
       src={src}
       alt={artwork.title}
-      className="max-h-80 w-full object-contain"
+      className={fullSize ? 'max-h-[80vh] w-auto max-w-full object-contain' : 'max-h-80 w-full object-contain'}
       style={{ background: '#0a0a0a', borderRadius: '10px' }}
       loading="eager"
     />
@@ -155,12 +155,6 @@ export function QuizQuestion({ question, selectedAnswer, onAnswer }: Props) {
         {prompt}
       </p>
 
-      {(artwork.imageUrl || artwork.image_id) && (
-        <div className="mb-4 flex justify-center">
-          <ArtworkImage artwork={artwork} />
-        </div>
-      )}
-
       {selectedAnswer !== null && (
         <p className="mb-3 text-center text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           <span className="font-semibold">{artwork.title}</span>
@@ -168,7 +162,7 @@ export function QuizQuestion({ question, selectedAnswer, onAnswer }: Props) {
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-2">
         {choices.map((choice, i) => (
           <ChoiceButton
             key={i}

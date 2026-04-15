@@ -89,7 +89,9 @@ export const vaAdapter: MuseumAdapter = {
   async searchCombined(filters, page, signal?) {
     const params = new URLSearchParams();
 
-    if (filters.colorHue !== null) {
+    if (filters.keywords) {
+      params.set('q', filters.keywords);
+    } else if (filters.colorHue !== null) {
       params.set('q', getColorName(filters.colorHue));
     }
 

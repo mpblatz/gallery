@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Artwork } from '../types/artwork';
 import { adapters } from '../lib/museums/registry';
+import { HeartButton } from './HeartButton';
+import { GalleryPicker } from './GalleryPicker';
 
 interface Props {
   artwork: Artwork;
@@ -10,6 +12,7 @@ interface Props {
 export function CanvasImage({ artwork, onClick }: Props) {
   const [loaded, setLoaded] = useState(false);
   const [inView, setInView] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const containerRef = useRef<HTMLButtonElement>(null);
   const lqip = artwork.thumbnail?.lqip;
   const imgSrc = artwork.imageUrl;
@@ -67,6 +70,33 @@ export function CanvasImage({ artwork, onClick }: Props) {
           />
         )}
       </div>
+
+      {/* Action overlays */}
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 flex items-center gap-1">
+        <HeartButton
+          artwork={artwork}
+          className="drop-shadow-lg"
+        />
+        <button
+          onClick={(e) => { e.stopPropagation(); setPickerOpen((p) => !p); }}
+          className="transition-all duration-200 cursor-pointer drop-shadow-lg"
+          style={{ color: 'rgba(255,255,255,0.7)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
+          aria-label="Add to gallery"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Gallery picker popover */}
+      {pickerOpen && (
+        <div className="absolute top-9 right-2 z-20" onClick={(e) => e.stopPropagation()}>
+          <GalleryPicker artwork={artwork} onClose={() => setPickerOpen(false)} />
+        </div>
+      )}
 
       {/* Hover overlay */}
       <div

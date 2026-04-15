@@ -154,6 +154,10 @@ export const metAdapter: MuseumAdapter = {
       parts.push(getColorName(filters.colorHue));
     }
 
+    if (filters.keywords) {
+      parts.unshift(filters.keywords);
+    }
+
     params.set('q', parts.length > 0 ? parts.join(' ') : '*');
 
     const key = `combined-${params.toString()}`;

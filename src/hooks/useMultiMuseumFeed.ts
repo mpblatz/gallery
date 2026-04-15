@@ -15,6 +15,8 @@ export interface FeedFilters {
   artType: ArtType;
   year: number | null;        // null = no time filter
   colorHue: number | null;    // null = no color filter
+  publicDomain: boolean;
+  keywords: string | null;    // null = no text search
 }
 
 export function useMultiMuseumFeed(filters: FeedFilters) {
@@ -29,6 +31,7 @@ export function useMultiMuseumFeed(filters: FeedFilters) {
   const debouncedType = useDebounce(filters.artType, 100);
   const debouncedYear = useDebounce(filters.year, 300);
   const debouncedHue = useDebounce(filters.colorHue, 300);
+  const debouncedKeywords = useDebounce(filters.keywords, 400);
 
   const timeRange = debouncedYear !== null
     ? { startYear: debouncedYear - getDateWindow(debouncedYear), endYear: debouncedYear + getDateWindow(debouncedYear) }
@@ -39,10 +42,16 @@ export function useMultiMuseumFeed(filters: FeedFilters) {
     artType: debouncedType,
     timeRange,
     colorHue: debouncedHue,
+    keywords: debouncedKeywords || null,
   };
 
-  // Stringify for dependency tracking
-  const requestKey = JSON.stringify(feedRequest);
+  const applyClientFilters = (arts: Artwork[]) => {
+    if (filters.publicDomain) return arts.filter((a) => a.is_public_domain);
+    return arts;
+  };
+
+  // Stringify for dependency tracking (include client filters)
+  const requestKey = JSON.stringify({ ...feedRequest, publicDomain: filters.publicDomain });
 
   // Initial load / filter change
   useEffect(() => {
@@ -59,7 +68,7 @@ export function useMultiMuseumFeed(filters: FeedFilters) {
     fetchFeed(feedRequest, false, controller.signal)
       .then((res) => {
         if (controller.signal.aborted) return;
-        setArtworks(res.artworks);
+        setArtworks(applyClientFilters(res.artworks));
         setHasMore(res.hasMore);
       })
       .catch((e) => {
@@ -84,7 +93,7 @@ export function useMultiMuseumFeed(filters: FeedFilters) {
 
     fetchFeed(feedRequest, true, controller.signal)
       .then((res) => {
-        setArtworks((prev) => [...prev, ...res.artworks]);
+        setArtworks((prev) => [...prev, ...applyClientFilters(res.artworks)]);
         setHasMore(res.hasMore);
       })
       .catch((e) => {
