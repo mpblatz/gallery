@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Artwork } from '../types/artwork';
 import { CanvasImage } from './CanvasImage';
+import { Masonry } from './Masonry';
 import { SentinelLoader } from './SentinelLoader';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ArtworkModal } from './ArtworkModal';
@@ -34,7 +35,7 @@ export function InfiniteCanvas({ artworks, loading, error, hasMore, loadMore }: 
           </div>
         )}
 
-        <div className="masonry">
+        <Masonry>
           {artworks.map((artwork, i) => (
             <CanvasImage
               key={`${artwork.source}-${artwork.id}-${i}`}
@@ -42,7 +43,7 @@ export function InfiniteCanvas({ artworks, loading, error, hasMore, loadMore }: 
               onClick={setSelected}
             />
           ))}
-        </div>
+        </Masonry>
 
         <SentinelLoader
           onVisible={loadMore}

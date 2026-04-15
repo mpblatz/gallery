@@ -42,7 +42,7 @@ export function CanvasImage({ artwork, onClick }: Props) {
     <button
       ref={containerRef}
       onClick={() => onClick(artwork)}
-      className="masonry-item group relative w-full overflow-hidden cursor-pointer block"
+      className="group relative w-full overflow-hidden cursor-pointer block"
       style={{
         borderRadius: '4px',
         background: '#0a0a0a',

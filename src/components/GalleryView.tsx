@@ -3,6 +3,7 @@ import type { Artwork } from '../types/artwork';
 import type { AppView } from './AppMenu';
 import { useCollections } from '../hooks/useCollections';
 import { CanvasImage } from './CanvasImage';
+import { Masonry } from './Masonry';
 import { ArtworkModal } from './ArtworkModal';
 import { LoadingSpinner } from './LoadingSpinner';
 
@@ -96,9 +97,9 @@ export function GalleryView({ view, onBack }: Props) {
           </div>
         )}
 
-        <div className="masonry">
+        <Masonry>
           {artworks.map((artwork, i) => (
-            <div key={`${artwork.source}-${artwork.id}-${i}`} className="masonry-item relative group">
+            <div key={`${artwork.source}-${artwork.id}-${i}`} className="relative group">
               <CanvasImage artwork={artwork} onClick={setSelected} />
               {view.kind === 'gallery' && (
                 <button
@@ -119,7 +120,7 @@ export function GalleryView({ view, onBack }: Props) {
               )}
             </div>
           ))}
-        </div>
+        </Masonry>
       </div>
 
       {selected && (
