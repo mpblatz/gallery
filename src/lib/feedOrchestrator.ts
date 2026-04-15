@@ -54,6 +54,7 @@ export async function fetchFeed(req: FeedRequest, isLoadMore: boolean, signal?: 
   };
 
   const hasDateFilter = req.timeRange !== null;
+  const hasColorFilter = req.colorHue !== null;
 
   // Determine which adapters to query
   const activeAdapters = req.museum === 'all'
@@ -66,6 +67,8 @@ export async function fetchFeed(req: FeedRequest, isLoadMore: boolean, signal?: 
     if (state?.exhausted) return false;
     // Skip adapters that don't support the active date filter
     if (hasDateFilter && a.supports?.dateRange === false) return false;
+    // Skip adapters that don't support real color search
+    if (hasColorFilter && a.supports?.color === false) return false;
     return true;
   });
 
@@ -109,6 +112,7 @@ export async function fetchFeed(req: FeedRequest, isLoadMore: boolean, signal?: 
   const hasMore = activeAdapters.some((a) => {
     // Adapters skipped for capability reasons are not "exhausted" — just irrelevant
     if (hasDateFilter && a.supports?.dateRange === false) return false;
+    if (hasColorFilter && a.supports?.color === false) return false;
     const state = pageStates.get(a.id);
     return !state?.exhausted;
   });

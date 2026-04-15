@@ -92,7 +92,7 @@ export const smkAdapter: MuseumAdapter = {
   id: 'smk',
   name: 'SMK — National Gallery of Denmark',
   shortName: 'SMK',
-  supports: { dateRange: false },
+  supports: { dateRange: false, color: false },
   async searchFeatured(page, signal?) {
     return query('*', ['has_image:true'], page, signal);
   },

@@ -61,6 +61,7 @@ export const clevelandAdapter: MuseumAdapter = {
   id: 'cleveland',
   name: 'Cleveland Museum of Art',
   shortName: 'CMA',
+  supports: { color: false },
   async searchFeatured(page, signal?) {
     return query(new URLSearchParams(), page, signal);
   },

@@ -91,6 +91,7 @@ export const metAdapter: MuseumAdapter = {
   id: 'met',
   name: 'The Metropolitan Museum of Art',
   shortName: 'Met',
+  supports: { color: false },
   async searchFeatured(page, signal?) {
     const key = 'featured';
     if (cachedKey !== key) {

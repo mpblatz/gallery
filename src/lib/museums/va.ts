@@ -64,6 +64,7 @@ export const vaAdapter: MuseumAdapter = {
   id: 'va',
   name: 'Victoria and Albert Museum',
   shortName: 'V&A',
+  supports: { color: false },
   async searchFeatured(page, signal?) {
     return query(new URLSearchParams(), page, signal);
   },

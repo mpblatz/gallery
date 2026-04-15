@@ -146,8 +146,8 @@ export const articAdapter: MuseumAdapter = {
 
     if (filters.colorHue !== null) {
       must.push({ exists: { field: 'color' } });
-      const low = filters.colorHue - 15;
-      const high = filters.colorHue + 15;
+      const low = filters.colorHue - 25;
+      const high = filters.colorHue + 25;
       if (low < 0) {
         must.push({ bool: { should: [{ range: { 'color.h': { gte: 0, lte: high } } }, { range: { 'color.h': { gte: 360 + low, lte: 360 } } }], minimum_should_match: 1 } });
       } else if (high > 360) {
